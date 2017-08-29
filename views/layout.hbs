@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{title}}</title>
+
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Shopping List">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+        <link rel="apple-touch-icon" href="/images/shopping-cart.jpg">
+        <link rel='stylesheet' href="/stylesheets/style.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <nav class="navbar navbar-light fixed-top bg-light">
+            <span class="h1 navbar-brand mb-0">Shopping List</span>
+            <span class="navbar-text">
+                <i id="clear-button" class="fa fa-trash"></i>
+            </span>
+        </nav>
+
+        {{{body}}}
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+        <script src="/javascripts/main.js"></script>
+    </body>
+</html>

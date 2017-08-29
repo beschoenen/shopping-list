@@ -1,0 +1,32 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+
+#clear-button {
+  cursor: pointer; }
+
+.new-item-container {
+  position: fixed;
+  top: 55px;
+  width: 100%;
+  z-index: 2;
+  background: white; }
+
+#new-item {
+  margin: 10px 15px 0;
+  width: calc(100% - 30px); }
+
+.container-fluid {
+  margin-top: 115px; }
+
+ul {
+  margin-bottom: 15px !important; }
+
+li.typing {
+  color: #949494; }
+
+li.checked label {
+  text-decoration: line-through;
+  color: #949494; }
+
+li input[type=checkbox] {
+  margin-right: 10px; }

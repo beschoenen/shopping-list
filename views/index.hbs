@@ -1,0 +1,15 @@
+<div class="new-item-container">
+    <input class="form-control" id="new-item" placeholder="{{item}}..."/>
+</div>
+<div class="container-fluid">
+    <div>
+        <ul class="list-group">
+            {{#each entries}}
+                <li class="list-group-item {{#if this.checked}}checked{{/if}}" data-id="{{this._id}}">
+                    <input type="checkbox" {{#if this.checked}}checked{{/if}} id="checkbox-{{this._id}}"/>
+                    <label for="checkbox-{{this._id}}">{{this.text}}</label>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>
