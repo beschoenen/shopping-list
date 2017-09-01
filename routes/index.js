@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
+const express = require('express');
+const mongoose = require('mongoose');
+const router = express.Router();
 
-var Entry = mongoose.model('Entry');
+const Entry = mongoose.model('Entry');
 
-var RandomItemList = [
+const RandomItemList = [
   "Eggs",
   "Bread",
   "Milk",
@@ -13,9 +13,9 @@ var RandomItemList = [
 ];
 
 router.get('/', function (req, res) {
-  Entry.find().sort('-_id').exec().then(function (entries) {
+  Entry.find().sort('-_id').exec().then(entries => {
     res.render('index', {
-      entries: entries,
+      entries: entries.map(entry => entry.toJSON),
       item: RandomItemList[Math.floor(Math.random() * RandomItemList.length)]
     });
   })

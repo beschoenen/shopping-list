@@ -8,9 +8,6 @@ var app = require('../app');
 var debug = require('debug')('shopping-list:server');
 var http = require('http');
 
-var mongoose = require('mongoose');
-var Entry = mongoose.model('Entry');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -38,31 +35,7 @@ server.on('listening', onListening);
 
 var io = require('socket.io').listen(server);
 
-io.on('connection', function (socket) {
-  socket.emit('connected');
-
-  socket.on('typing', function (data) {
-    io.emit('typed', data);
-  });
-
-  socket.on('saving', function (data) {
-    new Entry({text: data.text}).save(function (error, entry) {
-      io.emit('saved', {oldId: data.id, entry: entry});
-    });
-  });
-
-  socket.on('checking', function (data) {
-    Entry.findOneAndUpdate({_id: data.id}, {$set: {checked: data.state}}, {new: true}, function (error, entry) {
-      io.emit('checked', entry);
-    });
-  });
-
-  socket.on('clearing', function () {
-    Entry.remove({checked: true}, function () {
-      io.emit('cleared');
-    });
-  });
-});
+require('../socketHandler')(io);
 
 /**
  * Normalize a port into a number, string, or false.

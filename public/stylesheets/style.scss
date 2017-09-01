@@ -1,9 +1,40 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 #clear-button {
   cursor: pointer;
+}
+
+#status {
+  margin-left: 5px;
+
+  &.red {
+    color: red;
+  }
+
+  &.green {
+    color: green;
+  }
+}
+
+#users {
+  &:before {
+    content: "(";
+  }
+
+  &:after {
+    content: " shoppers here)";
+  }
+
+  &.singular:after {
+    content: " shopper here)";
+  }
+
+  margin-right: 10px;
 }
 
 .new-item-container {
@@ -25,21 +56,21 @@ body {
 
 ul {
   margin-bottom: 15px !important;
-}
 
-li {
-  &.typing {
-    color: #949494;
-  }
-
-  &.checked {
-    label {
-      text-decoration: line-through;
+  li {
+    &.typing {
       color: #949494;
     }
-  }
 
-  input[type=checkbox] {
-    margin-right: 10px;
+    &.checked {
+      label {
+        text-decoration: line-through;
+        color: #949494;
+      }
+    }
+
+    input[type=checkbox] {
+      margin-right: 10px;
+    }
   }
 }

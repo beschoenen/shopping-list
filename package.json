@@ -11,7 +11,7 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "hbs": "~4.0.1",
-    "mongoose": "^4.11.8",
+    "mongoose": "^4.11.9",
     "morgan": "~1.8.1",
     "node-sass-middleware": "0.9.8",
     "serve-favicon": "~2.4.2",
