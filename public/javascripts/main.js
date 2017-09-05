@@ -117,7 +117,11 @@ $(document).on('change', 'input[type=checkbox]', event => {
  */
 
 function createRow(data, typing) {
-  const li = $('<li class="list-group-item">').attr('data-id', data.id).toggleClass('typing', typing);
+  const li = $('<li class="list-group-item">').attr('data-id', data.id);
+  
+  if (typing) {
+    li.addClass('typing');
+  }
 
   li.append($('<input type="checkbox"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing));
   li.append('&nbsp;');
