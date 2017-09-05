@@ -27,11 +27,11 @@ body {
   }
 
   &:after {
-    content: " shoppers here)";
+    content: " shoppers)";
   }
 
   &.singular:after {
-    content: " shopper here)";
+    content: " shopper)";
   }
 
   margin-right: 10px;
