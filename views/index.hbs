@@ -1,15 +1,13 @@
-<div class="new-item-container">
+<div class="container container-small new-item-container">
     <input class="form-control" id="new-item" placeholder="{{item}}..." autofocus autocomplete="off"/>
 </div>
-<div class="container-fluid">
-    <div>
-        <ul class="list-group">
-            {{#each entries}}
-                <li class="list-group-item {{#if this.checked}}checked{{/if}}" data-id="{{this.id}}">
-                    <input type="checkbox" {{#if this.checked}}checked{{/if}} id="checkbox-{{this.id}}"/>
-                    <label for="checkbox-{{this.id}}">{{this.text}}</label>
-                </li>
-            {{/each}}
-        </ul>
-    </div>
+<div class="container container-small item-container">
+    <ul class="list-group">
+        {{#each entries}}
+            <li class="list-group-item {{#if this.checked}}checked{{/if}}" data-id="{{this.id}}">
+                <input type="checkbox" {{#if this.checked}}checked{{/if}} id="checkbox-{{this.id}}"/>
+                <label for="checkbox-{{this.id}}">{{this.text}}</label>
+            </li>
+        {{/each}}
+    </ul>
 </div>

@@ -1,5 +1,5 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px Helvetica, sans-serif;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -27,31 +27,27 @@ body {
   }
 
   &:after {
-    content: " shoppers)";
-  }
-
-  &.singular:after {
-    content: " shopper)";
+    content: " here)";
   }
 
   margin-right: 10px;
 }
 
 .new-item-container {
+  z-index: 2;
   position: fixed;
   top: 55px;
-  width: 100%;
-  z-index: 2;
+  left: 50%;
+  transform: translate(-50%, 0);
   background: white;
 }
 
-#new-item {
-  margin: 10px 15px 0;
-  width: calc(100% - 30px);
+.item-container {
+  margin-top: 115px;
 }
 
-.container-fluid {
-  margin-top: 115px;
+#new-item {
+  margin: 10px 0 0;
 }
 
 ul {
@@ -73,4 +69,8 @@ ul {
       margin-right: 10px;
     }
   }
+}
+
+.container-small {
+  max-width: 500px !important;
 }

@@ -14,11 +14,11 @@ socket.on('connected', data => {
 
 socket.on('disconnect', () => {
   $('#status').removeClass('green').addClass('red');
-  $('#users').text(0).toggleClass('singular', false);
+  $('#users').text(0);
 });
 
 socket.on('users-changed', data => {
-  $('#users').text(data.users).toggleClass('singular', data.users === 1);
+  $('#users').text(data.users);
 });
 
 socket.on('typed', data => {
