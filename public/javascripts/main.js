@@ -65,9 +65,7 @@ socket.on('checked', data => {
   row.find('input[type=checkbox]').prop('checked', data.checked);
 });
 
-socket.on('cleared', () => {
-  $('li.checked').remove();
-});
+socket.on('cleared', () => $('li.checked').remove());
 
 /**
  * Event Handlers
@@ -79,16 +77,10 @@ let rowId = null;
 resetInput();
 
 $('#new-item').keyup(event => {
-  const inputBox = $('#new-item');
-  const newValue = inputBox.val();
+  const newValue = $('#new-item').val().trim();
 
   if (event.keyCode === 13 && newValue && socket.io.readyState === 'open') {
-    socket.emit('saving', {
-      text: newValue,
-      id: rowId
-    });
-
-    return resetInput();
+    return saveNewItem(newValue);
   }
 
   if (newValue !== oldValue) {
@@ -100,6 +92,12 @@ $('#new-item').keyup(event => {
         id: rowId
       }
     });
+  }
+}).focusout(() => {
+  const newValue = $('#new-item').val().trim();
+
+  if (newValue !== '' && socket.io.readyState === 'open') {
+    saveNewItem(newValue);
   }
 });
 
@@ -134,4 +132,13 @@ function resetInput() {
   oldValue = '';
   rowId = Math.random().toString(36).substring(7);
   $('#new-item').val('');
+}
+
+function saveNewItem(text) {
+  socket.emit('saving', {
+    text: text,
+    id: rowId
+  });
+
+  return resetInput();
 }
