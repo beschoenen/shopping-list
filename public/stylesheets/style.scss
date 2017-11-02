@@ -48,7 +48,6 @@ body {
 
 .item-edit {
   margin: 8px 0;
-  cursor: pointer;
 }
 
 #new-item {
@@ -68,6 +67,15 @@ ul {
         text-decoration: line-through;
         color: #949494;
       }
+
+      .item-edit {
+        color: #949494;
+        cursor: auto;
+      }
+    }
+
+    .item-edit, label, input[type=checkbox] {
+      cursor: pointer;
     }
 
     input[type=checkbox] {
