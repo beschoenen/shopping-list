@@ -17,9 +17,7 @@ socket.on('disconnect', () => {
   $('#users').text(0);
 });
 
-socket.on('users-changed', data => {
-  $('#users').text(data.users);
-});
+socket.on('users-changed', data => $('#users').text(data.users));
 
 socket.on('typed', data => {
   if (data.userId === userId) return;
@@ -113,13 +111,15 @@ $('#clear-button').click(() => socket.emit('clearing'));
 
 $(document).on('change', 'input[type=checkbox]', event => {
   socket.emit('checking', {
-    id: $(event.target).closest('li').data('id'),
+    id: $(event.target).parent().data('id'),
     state: event.target.checked
   });
 });
 
 $(document).on('click', '.item-edit', event => {
   const target = $(event.target);
+
+  if (target.siblings('input[type=checkbox]:checked').length) return;
 
   $('#new-item').val(target.siblings('label').text()).focus();
   socket.emit('removing', { id: target.parent().data('id') });
