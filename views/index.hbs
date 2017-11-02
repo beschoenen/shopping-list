@@ -7,6 +7,7 @@
             <li class="list-group-item {{#if this.checked}}checked{{/if}}" data-id="{{this.id}}">
                 <input type="checkbox" {{#if this.checked}}checked{{/if}} id="checkbox-{{this.id}}"/>
                 <label for="checkbox-{{this.id}}">{{this.text}}</label>
+                <i class="fa fa-pencil pull-right item-edit"></i>
             </li>
         {{/each}}
     </ul>

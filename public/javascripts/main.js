@@ -65,6 +65,10 @@ socket.on('checked', data => {
   row.find('input[type=checkbox]').prop('checked', data.checked);
 });
 
+socket.on('removed', data => {
+  $(`li[data-id=${data.id}]`).remove();
+});
+
 socket.on('cleared', () => $('li.checked').remove());
 
 /**
@@ -94,11 +98,15 @@ $('#new-item').keyup(event => {
     });
   }
 }).focusout(() => {
-  const newValue = $('#new-item').val().trim();
+  const originalValue = $('#new-item').val().trim();
 
-  if (newValue !== '' && socket.io.readyState === 'open') {
-    saveNewItem(newValue);
-  }
+  setTimeout(() => {
+    const newValue = $('#new-item').val().trim();
+
+    if (originalValue === newValue && newValue !== '' && socket.io.readyState === 'open') {
+      saveNewItem(newValue);
+    }
+  }, 100);
 });
 
 $('#clear-button').click(() => socket.emit('clearing'));
@@ -110,13 +118,20 @@ $(document).on('change', 'input[type=checkbox]', event => {
   });
 });
 
+$(document).on('click', '.item-edit', event => {
+  const target = $(event.target);
+
+  $('#new-item').val(target.siblings('label').text()).focus();
+  socket.emit('removing', { id: target.parent().data('id') });
+});
+
 /**
  * Helper methods
  */
 
 function createRow(data, typing) {
   const li = $('<li class="list-group-item">').attr('data-id', data.id);
-  
+
   if (typing) {
     li.addClass('typing');
   }
@@ -124,6 +139,7 @@ function createRow(data, typing) {
   li.append($('<input type="checkbox"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing));
   li.append('&nbsp;');
   li.append($('<label>').attr('for', `checkbox-${data.id}`).text(data.text + (typing ? '..' : '')));
+  li.append($('<i class="fa fa-pencil pull-right item-edit">'));
 
   return li;
 }

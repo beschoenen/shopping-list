@@ -44,6 +44,12 @@ module.exports = function (io) {
       });
     });
 
+    socket.on('removing', function (data) {
+      Entry.remove({ _id: data.id }, function () {
+        io.emit('removed', { id: data.id });
+      });
+    });
+
     socket.on('clearing', function () {
       Entry.remove({ checked: true }, function () {
         io.emit('cleared');
