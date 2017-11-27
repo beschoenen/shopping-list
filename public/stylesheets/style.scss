@@ -46,10 +46,6 @@ body {
   margin-top: 115px;
 }
 
-.item-edit {
-  margin: 8px 0;
-}
-
 #new-item {
   margin: 10px 0 0;
 }
@@ -80,16 +76,17 @@ ul {
 
     input[type=checkbox] {
       margin-right: 10px;
-      margin-top: 7px;
     }
 
     label {
       margin-top: 3px;
       margin-bottom: 0;
+      overflow-wrap: break-word;
+      width: calc(100% - 48px);
     }
 
     .item-edit {
-      margin-top: 8px;
+      margin: 8px 0 8px 8px;
     }
   }
 }
