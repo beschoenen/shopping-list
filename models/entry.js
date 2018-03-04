@@ -5,7 +5,7 @@ const entrySchema = mongoose.Schema({
   text: { type: String, required: true }
 });
 
-entrySchema.virtual('toJSON').get(function () {
+entrySchema.virtual('toJSON').get(() => {
   return {
     id: this._id,
     text: this.text,

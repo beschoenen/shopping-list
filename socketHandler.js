@@ -3,34 +3,29 @@ const Entry = mongoose.model('Entry');
 
 const users = [];
 
-module.exports = function (io) {
+module.exports = io => {
 
-  io.on('connection', function (socket) {
+  io.on('connection', socket => {
     const userId = Math.random().toString(36).substring(7);
     users.push(userId);
 
-    socket.emit('connected', {
-      id: userId
-    });
+    io.emit('users-changed', { users: users.length });
 
-    io.emit('users-changed', {
-      users: users.length
-    });
+    socket.emit('connected', { id: userId });
 
-    socket.on('disconnect', function () {
+    /////////
+    // Events
+
+    socket.on('disconnect', () => {
       users.splice(users.indexOf(userId), 1);
 
-      io.emit('users-changed', {
-        users: users.length
-      });
+      io.emit('users-changed', { users: users.length });
     });
 
-    socket.on('typing', function (data) {
-      io.emit('typed', data);
-    });
+    socket.on('typing', data => io.emit('typed', data));
 
-    socket.on('saving', function (data) {
-      new Entry({ text: data.text }).save(function (error, entry) {
+    socket.on('saving', data => {
+      new Entry({ text: data.text }).save((error, entry) => {
         io.emit('saved', {
           tempId: data.id,
           entry: entry.toJSON
@@ -38,22 +33,18 @@ module.exports = function (io) {
       });
     });
 
-    socket.on('checking', function (data) {
-      Entry.findOneAndUpdate({ _id: data.id }, { $set: { checked: data.state } }, { new: true }, function (error, entry) {
+    socket.on('checking', data => {
+      Entry.findOneAndUpdate({ _id: data.id }, { $set: { checked: data.state } }, { new: true }, (error, entry) => {
         io.emit('checked', entry.toJSON);
       });
     });
 
-    socket.on('removing', function (data) {
-      Entry.remove({ _id: data.id }, function () {
-        io.emit('removed', { id: data.id });
-      });
+    socket.on('removing', data => {
+      Entry.remove({ _id: data.id }, () => io.emit('removed', { id: data.id }));
     });
 
-    socket.on('clearing', function () {
-      Entry.remove({ checked: true }, function () {
-        io.emit('cleared');
-      });
+    socket.on('clearing', () => {
+      Entry.remove({ checked: true }, () => io.emit('cleared'));
     });
   });
 

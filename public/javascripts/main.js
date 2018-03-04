@@ -135,7 +135,7 @@ $(document).on('click', '.item-edit', event => {
  * Helper methods
  */
 
-function createRow(data, typing) {
+function createRow (data, typing) {
   const li = $('<li class="list-group-item">').attr('data-id', data.id);
 
   if (typing) {
@@ -151,7 +151,7 @@ function createRow(data, typing) {
   return li;
 }
 
-function createClearButton() {
+function createClearButton () {
   const button = $('<button type="button" id="clear-button">');
 
   button.text("Clear Checked");
@@ -160,13 +160,13 @@ function createClearButton() {
   return button;
 }
 
-function resetInput() {
+function resetInput () {
   oldValue = '';
   rowId = Math.random().toString(36).substring(7);
   $('#new-item').val('');
 }
 
-function saveNewItem(text) {
+function saveNewItem (text) {
   socket.emit('saving', {
     text: text,
     id: rowId
@@ -175,7 +175,7 @@ function saveNewItem(text) {
   return resetInput();
 }
 
-function toggleClearButton() {
+function toggleClearButton () {
   const clearButton = $("#clear-button");
 
   if ($("input[id^=checkbox-]:checked").length > 0) {
