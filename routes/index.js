@@ -13,7 +13,7 @@ const RandomItemList = [
 ];
 
 router.get('/', function (req, res) {
-  Entry.find().sort('-_id').exec().then(entries => {
+  Entry.find().sort({ checked: 1, _id: -1 }).exec().then(entries => {
     res.render('index', {
       entries: entries.map(entry => entry.toJSON),
       item: RandomItemList[Math.floor(Math.random() * RandomItemList.length)]

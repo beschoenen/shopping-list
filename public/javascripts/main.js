@@ -63,6 +63,7 @@ socket.on('checked', data => {
   row.find('input[type=checkbox]').prop('checked', data.checked);
 
   toggleClearButton();
+  sortItems();
 });
 
 socket.on('removed', data => {
@@ -185,4 +186,18 @@ function toggleClearButton () {
   } else if (clearButton.length) {
     clearButton.remove();
   }
+}
+
+function sortItems () {
+  const ul = $("div.item-container ul");
+
+  const children = ul.children('li').sort((a, b) => {
+    let a_checked = $(a).find('input[type=checkbox]:checked').length;
+    let b_checked = $(b).find('input[type=checkbox]:checked').length;
+
+    return a_checked - b_checked || ($(a).attr('data-id') > $(b).attr('data-id') ? -1 : 1);
+  });
+
+  ul.children("li").remove();
+  ul.prepend(children);
 }
