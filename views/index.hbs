@@ -10,5 +10,10 @@
                 <i class="fas fa-pencil-alt pull-right item-edit"></i>
             </li>
         {{/each}}
+        {{#ifAnyChecked entries}}
+            <button type="button" id="clear-button" class="list-group-item list-group-item-danger">
+                Clear Checked
+            </button>
+        {{/ifAnyChecked}}
     </ul>
 </div>

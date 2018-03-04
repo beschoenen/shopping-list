@@ -61,13 +61,19 @@ socket.on('checked', data => {
 
   row.toggleClass('checked', data.checked);
   row.find('input[type=checkbox]').prop('checked', data.checked);
+
+  toggleClearButton();
 });
 
 socket.on('removed', data => {
   $(`li[data-id=${data.id}]`).remove();
+  toggleClearButton();
 });
 
-socket.on('cleared', () => $('li.checked').remove());
+socket.on('cleared', () => {
+  $('li.checked').remove();
+  toggleClearButton();
+});
 
 /**
  * Event Handlers
@@ -107,7 +113,7 @@ $('#new-item').keyup(event => {
   }, 100);
 });
 
-$('#clear-button').click(() => socket.emit('clearing'));
+$(document).on('click', '#clear-button', () => socket.emit('clearing'));
 
 $(document).on('change', 'input[type=checkbox]', event => {
   socket.emit('checking', {
@@ -145,6 +151,15 @@ function createRow(data, typing) {
   return li;
 }
 
+function createClearButton() {
+  const button = $('<button type="button" id="clear-button">');
+
+  button.text("Clear Checked");
+  button.addClass("list-group-item list-group-item-danger");
+
+  return button;
+}
+
 function resetInput() {
   oldValue = '';
   rowId = Math.random().toString(36).substring(7);
@@ -158,4 +173,16 @@ function saveNewItem(text) {
   });
 
   return resetInput();
+}
+
+function toggleClearButton() {
+  const clearButton = $("#clear-button");
+
+  if ($("input[id^=checkbox-]:checked").length > 0) {
+    if (!clearButton.length) {
+      $("ul").append(createClearButton());
+    }
+  } else if (clearButton.length) {
+    clearButton.remove();
+  }
 }
