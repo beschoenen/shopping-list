@@ -1,6 +1,7 @@
 const socket = io(window.location.host);
 
 let userId = null;
+let autocomplete = null;
 
 /**
  * Socket Responses
@@ -8,6 +9,7 @@ let userId = null;
 
 socket.on('connected', data => {
   userId = data.id;
+  // autocomplete.setOptions({ lookup: data.suggestions });
 
   $('#status').removeClass('red').addClass('green');
 });
@@ -82,8 +84,6 @@ socket.on('cleared', () => {
 
 let oldValue = null;
 let rowId = null;
-
-resetInput();
 
 $('#new-item').keyup(event => {
   const newValue = $('#new-item').val().trim();
@@ -201,3 +201,8 @@ function sortItems () {
   ul.children("li").remove();
   ul.prepend(children);
 }
+
+$(document).ready(() => {
+  autocomplete = $("#new-item").autocomplete();
+  resetInput();
+});

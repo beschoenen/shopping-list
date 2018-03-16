@@ -80,11 +80,11 @@ ul {
       margin-top: 3px;
       margin-bottom: 0;
       overflow-wrap: break-word;
-      width: calc(100% - 51px);
+      width: calc(100% - 59px);
     }
 
     .item-edit {
-      margin: 8px 0 8px 0;
+      margin: 8px 0 8px 8px;
     }
   }
 
@@ -95,4 +95,36 @@ ul {
 
 .container-small {
   max-width: 500px !important;
+}
+
+.autocomplete-suggestions {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: #ffffff;
+  overflow: auto;
+}
+
+.autocomplete-suggestion {
+  padding: 3px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.autocomplete-selected {
+  background: #f0f0f0;
+}
+
+.autocomplete-suggestions strong {
+  font-weight: normal;
+  color: #3399ff;
+}
+
+.autocomplete-group {
+  padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+  display: block;
+  border-bottom: 1px solid #000000;
 }

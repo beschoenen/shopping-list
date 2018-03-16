@@ -11,7 +11,7 @@ module.exports = io => {
 
     io.emit('users-changed', { users: users.length });
 
-    socket.emit('connected', { id: userId });
+    socket.emit('connected', { id: userId, suggestions: ['test', 'test2', 'test3'] });
 
     /////////
     // Events
