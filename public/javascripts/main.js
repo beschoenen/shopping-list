@@ -38,7 +38,8 @@ function connected (data) {
 
   $("#new-item")
     .attr('placeholder', `${placeholder}...`)
-    .autocomplete({ lookup: data.suggestions })
+    .autocomplete({ lookupLimit: 5, lookup: data.suggestions })
+    .prop('disabled', false)
     .focus();
 
   $('#status').removeClass('red').addClass('green');
@@ -47,6 +48,7 @@ function connected (data) {
 function disconnect () {
   $('#status').removeClass('green').addClass('red');
   $('#users').text(0);
+  $('#new-item').prop('disabled', true);
 }
 
 function usersChanged (data) {
