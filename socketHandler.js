@@ -11,7 +11,13 @@ module.exports = io => {
 
     io.emit('users-changed', { users: users.length });
 
-    socket.emit('connected', { id: userId, suggestions: ['test', 'test2', 'test3'] });
+    Entry.find().sort({ checked: 1, _id: -1 }).exec().then(entries => {
+      socket.emit('connected', {
+        id: userId,
+        entries: entries.map(entry => entry.toJSON),
+        suggestions: []
+      });
+    });
 
     /////////
     // Events

@@ -1,19 +1,6 @@
 <div class="container container-small new-item-container">
-    <input class="form-control" id="new-item" placeholder="{{item}}..." autofocus autocomplete="off"/>
+    <input class="form-control" id="new-item" title="New item" autofocus autocomplete="off"/>
 </div>
 <div class="container container-small item-container">
-    <ul class="list-group">
-        {{#each entries}}
-            <li class="list-group-item {{#if this.checked}}checked{{/if}}" data-id="{{this.id}}">
-                <input type="checkbox" {{#if this.checked}}checked{{/if}} id="checkbox-{{this.id}}"/>
-                <label for="checkbox-{{this.id}}">{{this.text}}</label>
-                <i class="fas fa-pencil-alt pull-right item-edit"></i>
-            </li>
-        {{/each}}
-        {{#ifAnyChecked entries}}
-            <button type="button" id="clear-button" class="list-group-item list-group-item-danger">
-                Clear Checked
-            </button>
-        {{/ifAnyChecked}}
-    </ul>
+    <ul class="list-group"></ul>
 </div>

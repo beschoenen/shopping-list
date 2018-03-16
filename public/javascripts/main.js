@@ -1,27 +1,59 @@
 const socket = io(window.location.host);
 
 let userId = null;
-let autocomplete = null;
 
 /**
- * Socket Responses
+ * Socket Events
  */
 
-socket.on('connected', data => {
+socket.on('connected', connected);
+socket.on('disconnect', disconnect);
+socket.on('users-changed', usersChanged);
+socket.on('typed', typed);
+socket.on('saved', saved);
+socket.on('checked', checked);
+socket.on('removed', removed);
+socket.on('cleared', cleared);
+
+/**
+ * Socket Handlers
+ */
+
+function connected (data) {
   userId = data.id;
-  // autocomplete.setOptions({ lookup: data.suggestions });
+
+  data.entries.forEach(entry => {
+    if ($(`li[data-id=${entry.id}]`).length > 0) return;
+
+    saved({ tempId: null, entry: entry });
+  });
+
+  toggleClearButton();
+  sortItems();
+
+  let placeholder = "Eggs";
+  if (data.suggestions.length > 0) {
+    placeholder = data.suggestions[Math.floor(Math.random() * data.suggestions.length)];
+  }
+
+  $("#new-item")
+    .attr('placeholder', `${placeholder}...`)
+    .autocomplete({ lookup: data.suggestions })
+    .focus();
 
   $('#status').removeClass('red').addClass('green');
-});
+}
 
-socket.on('disconnect', () => {
+function disconnect () {
   $('#status').removeClass('green').addClass('red');
   $('#users').text(0);
-});
+}
 
-socket.on('users-changed', data => $('#users').text(data.users));
+function usersChanged (data) {
+  $('#users').text(data.users);
+}
 
-socket.on('typed', data => {
+function typed (data) {
   if (data.userId === userId) return;
 
   const oldRow = $(`li[data-id=${data.data.id}]`);
@@ -45,9 +77,9 @@ socket.on('typed', data => {
     clearInterval(interval);
     newRow.remove();
   }, 5000);
-});
+}
 
-socket.on('saved', data => {
+function saved (data) {
   const oldRow = $(`li[data-id=${data.tempId}]`);
   const newRow = createRow(data.entry);
 
@@ -56,9 +88,9 @@ socket.on('saved', data => {
   } else {
     $('ul').prepend(newRow);
   }
-});
+}
 
-socket.on('checked', data => {
+function checked (data) {
   const row = $(`li[data-id=${data.id}]`);
 
   row.toggleClass('checked', data.checked);
@@ -66,17 +98,17 @@ socket.on('checked', data => {
 
   toggleClearButton();
   sortItems();
-});
+}
 
-socket.on('removed', data => {
+function removed (data) {
   $(`li[data-id=${data.id}]`).remove();
   toggleClearButton();
-});
+}
 
-socket.on('cleared', () => {
+function cleared () {
   $('li.checked').remove();
   toggleClearButton();
-});
+}
 
 /**
  * Event Handlers
@@ -143,7 +175,11 @@ function createRow (data, typing) {
     li.addClass('typing');
   }
 
-  li.append($('<input type="checkbox"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing));
+  if (data.checked) {
+    li.addClass('checked');
+  }
+
+  li.append($('<input type="checkbox"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing).prop('checked', data.checked));
   li.append('&nbsp;');
   li.append($('<label>').attr('for', `checkbox-${data.id}`).text(data.text + (typing ? '..' : '')));
   li.append('&nbsp;');
@@ -202,7 +238,4 @@ function sortItems () {
   ul.prepend(children);
 }
 
-$(document).ready(() => {
-  autocomplete = $("#new-item").autocomplete();
-  resetInput();
-});
+resetInput();
