@@ -162,8 +162,11 @@ $(document).on('click', '.item-edit', event => {
 
   if (target.siblings('input[type=checkbox]:checked').length) return;
 
-  $('#new-item').val(target.siblings('label').text()).focus();
+  const text = target.siblings('label').text();
+
+  $('#new-item').val(text).focus();
   socket.emit('removing', { id: target.parent().data('id') });
+  socket.emit('typing', { userId: userId, data: { text: text, id: rowId } });
 });
 
 /**
