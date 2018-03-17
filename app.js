@@ -12,6 +12,7 @@ mongoose.connect('mongodb://localhost/shopping-list', {
 });
 
 require('./models/entry');
+require('./models/room');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

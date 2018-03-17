@@ -1,57 +1,87 @@
 const mongoose = require('mongoose');
 const Entry = mongoose.model('Entry');
-
-const users = [];
+const Room = mongoose.model('Room');
 
 module.exports = io => {
 
   io.on('connection', socket => {
-    const userId = Math.random().toString(36).substring(7);
-    users.push(userId);
+    let userRoom = null;
 
-    io.emit('users-changed', { users: users.length });
+    if (!socket.handshake.query.room) {
+      socket.disconnect();
+    }
 
-    Entry.find().sort({ checked: 1, _id: -1 }).exec().then(entries => {
-      socket.emit('connected', {
-        id: userId,
-        entries: entries.map(entry => entry.toJSON),
-        suggestions: []
+    Room.findOne({ name: socket.handshake.query.room }).exec().then(room => {
+      userRoom = room;
+
+      socket.join(room.name);
+
+      emitClients();
+
+      Entry.find({ room: room._id }).sort({ checked: 1, _id: -1 }).exec().then(entries => {
+        socket.emit('connected', { entries: entries.map(entry => entry.toJSON) });
+        socket.emit('suggestions-changed', { suggestions: room.suggestions });
       });
     });
 
-    /////////
-    // Events
+    //////////////////
+    // Events Handlers
 
     socket.on('disconnect', () => {
-      users.splice(users.indexOf(userId), 1);
+      if (!userRoom) return;
 
-      io.emit('users-changed', { users: users.length });
+      emitClients();
     });
 
-    socket.on('typing', data => io.emit('typed', data));
+    socket.on('typing', data => io.sockets.in(userRoom.name).emit('typed', { socketId: socket.id, data: data }));
 
     socket.on('saving', data => {
-      new Entry({ text: data.text }).save((error, entry) => {
-        io.emit('saved', {
-          tempId: data.id,
-          entry: entry.toJSON
-        });
+      Entry.create({ text: data.text, room: userRoom._id }).then(entry => {
+        io.sockets.in(userRoom.name).emit('saved', { tempId: data.id, entry: entry.toJSON });
+
+        if (userRoom.suggestions.indexOf(data.text) === -1) {
+          userRoom.suggestions.push(data.text);
+
+          Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, () => {
+            io.sockets.in(userRoom.name).emit('suggestions-changed', { suggestions: userRoom.suggestions });
+          });
+        }
       });
     });
 
     socket.on('checking', data => {
-      Entry.findOneAndUpdate({ _id: data.id }, { $set: { checked: data.state } }, { new: true }, (error, entry) => {
-        io.emit('checked', entry.toJSON);
-      });
+      Entry.findOneAndUpdate(
+        { _id: data.id, room: userRoom._id },
+        { $set: { checked: data.state } },
+        { new: true },
+        (error, entry) => {
+          if (!entry) return;
+
+          io.sockets.in(userRoom.name).emit('checked', entry.toJSON);
+        }
+      );
     });
 
     socket.on('removing', data => {
-      Entry.remove({ _id: data.id }, () => io.emit('removed', { id: data.id }));
+      Entry.remove({ _id: data.id, room: userRoom._id }, () => {
+        io.sockets.in(userRoom.name).emit('removed', data);
+      });
     });
 
     socket.on('clearing', () => {
-      Entry.remove({ checked: true }, () => io.emit('cleared'));
+      Entry.remove({ checked: true, room: userRoom._id }, () => {
+        io.sockets.in(userRoom.name).emit('cleared');
+      });
     });
+
+    /////////////////
+    // Helper methods
+
+    function emitClients () {
+      io.sockets.in(userRoom.name).clients((error, clients) => {
+        io.sockets.in(userRoom.name).emit('users-changed', { users: clients.length });
+      });
+    }
   });
 
 };

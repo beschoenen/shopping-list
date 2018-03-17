@@ -9,6 +9,7 @@
         <meta name="apple-mobile-web-app-title" content="Shopping List">
         <meta name="apple-mobile-web-app-status-bar-style" content="white">
 
+        <link rel="shortcut icon" href="/public/images/shopping-cart.jpg" />
         <link rel="apple-touch-icon" href="/public/images/shopping-cart.jpg">
         <link rel="stylesheet" href="/public/stylesheets/style.css"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css"/>
@@ -17,7 +18,7 @@
     <body>
         <nav class="navbar navbar-light fixed-top bg-light">
             <span class="h1 navbar-brand mb-0">
-                Shopping List
+                Shopping List - {{room.name}}
                 <i id="status" class="fas fa-power-off red"></i>
             </span>
             <span class="navbar-text">
@@ -27,6 +28,9 @@
 
         {{{body}}}
 
+        <script>
+            const room = "{{room.name}}";
+        </script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.slim.js"></script>

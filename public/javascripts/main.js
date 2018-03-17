@@ -1,6 +1,4 @@
-const socket = io(window.location.host);
-
-let userId = null;
+const socket = io(`${window.location.host}?room=${room}`);
 
 /**
  * Socket Events
@@ -9,6 +7,7 @@ let userId = null;
 socket.on('connected', connected);
 socket.on('disconnect', disconnect);
 socket.on('users-changed', usersChanged);
+socket.on('suggestions-changed', suggestionsChanged);
 socket.on('typed', typed);
 socket.on('saved', saved);
 socket.on('checked', checked);
@@ -20,8 +19,6 @@ socket.on('cleared', cleared);
  */
 
 function connected (data) {
-  userId = data.id;
-
   data.entries.forEach(entry => {
     if ($(`li[data-id=${entry.id}]`).length > 0) return;
 
@@ -31,32 +28,34 @@ function connected (data) {
   toggleClearButton();
   sortItems();
 
-  let placeholder = "Eggs";
-  if (data.suggestions.length > 0) {
-    placeholder = data.suggestions[Math.floor(Math.random() * data.suggestions.length)];
-  }
-
-  $("#new-item")
-    .attr('placeholder', `${placeholder}...`)
-    .autocomplete({ lookupLimit: 5, lookup: data.suggestions })
-    .prop('disabled', false)
-    .focus();
-
+  $('#new-item').prop('disabled', false).focus();
   $('#status').removeClass('red').addClass('green');
 }
 
 function disconnect () {
+  $('#new-item').prop('disabled', true).attr('placeholder', '');
   $('#status').removeClass('green').addClass('red');
   $('#users').text(0);
-  $('#new-item').prop('disabled', true);
 }
 
 function usersChanged (data) {
   $('#users').text(data.users);
 }
 
+function suggestionsChanged (data) {
+  let newItem = $('#new-item');
+
+  if (!newItem.attr('placeholder')) {
+    let placeholder = data.suggestions[Math.floor(Math.random() * data.suggestions.length)] || 'Eggs';
+
+    newItem.attr('placeholder', `${placeholder}...`);
+  }
+
+  newItem.autocomplete({ lookupLimit: 5, lookup: data.suggestions });
+}
+
 function typed (data) {
-  if (data.userId === userId) return;
+  if (data.socketId === socket.id) return;
 
   const oldRow = $(`li[data-id=${data.data.id}]`);
   const newRow = createRow(data.data, true);
@@ -128,13 +127,7 @@ $('#new-item').keyup(event => {
 
   if (newValue !== oldValue) {
     oldValue = newValue;
-    socket.emit('typing', {
-      userId: userId,
-      data: {
-        text: newValue,
-        id: rowId
-      }
-    });
+    socket.emit('typing', { id: rowId, text: newValue });
   }
 }).focusout(() => {
   const originalValue = $('#new-item').val().trim();
@@ -165,8 +158,9 @@ $(document).on('click', '.item-edit', event => {
   const text = target.siblings('label').text();
 
   $('#new-item').val(text).focus();
+
   socket.emit('removing', { id: target.parent().data('id') });
-  socket.emit('typing', { userId: userId, data: { text: text, id: rowId } });
+  socket.emit('typing', { id: rowId, text: text });
 });
 
 /**
@@ -196,8 +190,8 @@ function createRow (data, typing) {
 function createClearButton () {
   const button = $('<button type="button" id="clear-button">');
 
-  button.text("Clear Checked");
-  button.addClass("list-group-item list-group-item-danger");
+  button.text('Clear Checked');
+  button.addClass('list-group-item list-group-item-danger');
 
   return button;
 }
@@ -209,20 +203,17 @@ function resetInput () {
 }
 
 function saveNewItem (text) {
-  socket.emit('saving', {
-    text: text,
-    id: rowId
-  });
+  socket.emit('saving', { id: rowId, text: text });
 
   return resetInput();
 }
 
 function toggleClearButton () {
-  const clearButton = $("#clear-button");
+  const clearButton = $('#clear-button');
 
-  if ($("input[id^=checkbox-]:checked").length > 0) {
+  if ($('input[id^=checkbox-]:checked').length > 0) {
     if (!clearButton.length) {
-      $("ul").append(createClearButton());
+      $('ul').append(createClearButton());
     }
   } else if (clearButton.length) {
     clearButton.remove();
@@ -230,7 +221,7 @@ function toggleClearButton () {
 }
 
 function sortItems () {
-  const ul = $("div.item-container ul");
+  const ul = $('div.item-container ul');
 
   const children = ul.children('li').sort((a, b) => {
     let a_checked = $(a).find('input[type=checkbox]:checked').length;
@@ -239,7 +230,7 @@ function sortItems () {
     return a_checked - b_checked || ($(a).attr('data-id') > $(b).attr('data-id') ? -1 : 1);
   });
 
-  ul.children("li").remove();
+  ul.children('li').remove();
   ul.prepend(children);
 }
 
