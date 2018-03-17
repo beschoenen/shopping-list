@@ -52,6 +52,8 @@ ul {
   margin-bottom: 15px !important;
 
   li {
+    padding: 0 0 0 1.25rem !important;
+
     &.typing {
       color: #949494;
     }
@@ -68,19 +70,20 @@ ul {
       }
     }
 
-    .item-edit, label, input[type=checkbox] {
+    input[type=checkbox], label, .item-edit {
       cursor: pointer;
-      padding: 10px;
+      padding: 1rem;
     }
 
     label {
-      margin: -7px 0 -10px 0;
+      margin: 0;
       overflow-wrap: break-word;
-      width: calc(100% - 59px);
     }
 
     .item-edit {
-      margin: -2px -10px -2px 8px;
+      padding: 1.25rem;
+      position: absolute;
+      right: 0;
     }
   }
 
