@@ -12,6 +12,8 @@ module.exports = io => {
     }
 
     Room.findOne({ name: socket.handshake.query.room }).exec().then(room => {
+      if (!room) return socket.disconnect();
+
       userRoom = room;
 
       socket.join(room.name);
@@ -28,9 +30,7 @@ module.exports = io => {
     // Events Handlers
 
     socket.on('disconnect', () => {
-      if (!userRoom) return;
-
-      emitClients();
+      if (userRoom) emitClients();
     });
 
     socket.on('typing', data => io.sockets.in(userRoom.name).emit('typed', { socketId: socket.id, data: data }));
@@ -42,8 +42,8 @@ module.exports = io => {
         if (userRoom.suggestions.indexOf(data.text) === -1) {
           userRoom.suggestions.push(data.text);
 
-          Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, () => {
-            io.sockets.in(userRoom.name).emit('suggestions-changed', { suggestions: userRoom.suggestions });
+          Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, error => {
+            if (!error) io.sockets.in(userRoom.name).emit('suggestions-changed', { suggestions: userRoom.suggestions });
           });
         }
       });
@@ -55,22 +55,20 @@ module.exports = io => {
         { $set: { checked: data.state } },
         { new: true },
         (error, entry) => {
-          if (!entry) return;
-
-          io.sockets.in(userRoom.name).emit('checked', entry.toJSON);
+          if (entry) io.sockets.in(userRoom.name).emit('checked', entry.toJSON);
         }
       );
     });
 
     socket.on('removing', data => {
-      Entry.remove({ _id: data.id, room: userRoom._id }, () => {
-        io.sockets.in(userRoom.name).emit('removed', data);
+      Entry.remove({ _id: data.id, room: userRoom._id }, error => {
+        if (!error) io.sockets.in(userRoom.name).emit('removed', data);
       });
     });
 
     socket.on('clearing', () => {
-      Entry.remove({ checked: true, room: userRoom._id }, () => {
-        io.sockets.in(userRoom.name).emit('cleared');
+      Entry.remove({ checked: true, room: userRoom._id }, error => {
+        if (!error) io.sockets.in(userRoom.name).emit('cleared');
       });
     });
 
