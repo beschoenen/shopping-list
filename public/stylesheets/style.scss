@@ -5,13 +5,14 @@ body {
   -moz-user-select: none;
 }
 
-#clear-button {
-  cursor: pointer;
+.title {
+  max-width: calc(100% - 80px);
+  margin-right: 0 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #status {
-  margin-left: 5px;
-
   &.red {
     color: red;
   }
