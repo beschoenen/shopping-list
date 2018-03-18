@@ -1,5 +1,10 @@
 const socket = io(`${window.location.host}?room=${room}`);
 
+const listGroup = $('#list-group');
+const itemInput = $('#new-item');
+const statusIcon = $('#status');
+const userCount = $('#users');
+
 /**
  * Socket Events
  */
@@ -19,47 +24,45 @@ socket.on('cleared', cleared);
  */
 
 function connected (data) {
-  $('ul.list-group').find('li').remove();
+  listGroup.find('li').remove();
 
   data.entries.forEach(entry => saved({ tempId: null, entry: entry }));
 
   toggleClearButton();
   sortItems();
 
-  $('#new-item').prop('disabled', false).focus();
-  $('#status').removeClass('red').addClass('green');
+  itemInput.prop('disabled', false).focus();
+  statusIcon.removeClass('red').addClass('green');
 }
 
 function disconnect () {
-  $('#new-item').prop('disabled', true).attr('placeholder', '');
-  $('#status').removeClass('green').addClass('red');
-  $('#users').text(0);
+  itemInput.prop('disabled', true).attr('placeholder', '');
+  statusIcon.removeClass('green').addClass('red');
+  userCount.text(0);
 }
 
 function usersChanged (data) {
-  $('#users').text(data.users);
+  userCount.text(data.users);
 }
 
 function suggestionsChanged (data) {
-  let newItem = $('#new-item');
-
-  if (!newItem.attr('placeholder')) {
+  if (!itemInput.attr('placeholder')) {
     let placeholder = data.suggestions[Math.floor(Math.random() * data.suggestions.length)] || 'Eggs';
 
-    newItem.attr('placeholder', `${placeholder}...`);
+    itemInput.attr('placeholder', `${placeholder}...`);
   }
 
-  newItem.autocomplete({ lookupLimit: 5, lookup: data.suggestions });
+  itemInput.autocomplete({ lookupLimit: 5, lookup: data.suggestions });
 }
 
 function typed (data) {
   if (data.socketId === socket.id) return;
 
-  const oldRow = $(`li[data-id=${data.data.id}]`);
+  const oldRow = listGroup.find(`li[data-id=${data.data.id}]`);
   const newRow = createRow(data.data, true);
 
   if (!oldRow.length) {
-    return $('ul').prepend(newRow);
+    return listGroup.prepend(newRow);
   }
 
   if (data.data.text.length < 1) {
@@ -79,18 +82,18 @@ function typed (data) {
 }
 
 function saved (data) {
-  const oldRow = $(`li[data-id=${data.tempId}]`);
+  const oldRow = listGroup.find(`li[data-id=${data.tempId}]`);
   const newRow = createRow(data.entry);
 
   if (oldRow.length) {
     oldRow.replaceWith(newRow);
   } else {
-    $('ul').prepend(newRow);
+    listGroup.prepend(newRow);
   }
 }
 
 function checked (data) {
-  const row = $(`li[data-id=${data.id}]`);
+  const row = listGroup.find(`li[data-id=${data.id}]`);
 
   row.toggleClass('checked', data.checked);
   row.find('input[type=checkbox]').prop('checked', data.checked);
@@ -100,12 +103,12 @@ function checked (data) {
 }
 
 function removed (data) {
-  $(`li[data-id=${data.id}]`).remove();
+  listGroup.find(`li[data-id=${data.id}]`).remove();
   toggleClearButton();
 }
 
 function cleared () {
-  $('li.checked').remove();
+  listGroup.find('li.checked').remove();
   toggleClearButton();
 }
 
@@ -116,10 +119,10 @@ function cleared () {
 let oldValue = null;
 let rowId = null;
 
-$('#new-item').keyup(event => {
-  const newValue = $('#new-item').val().trim();
+itemInput.keyup(event => {
+  const newValue = itemInput.val().trim();
 
-  if (event.keyCode === 13 && newValue && socket.io.readyState === 'open') {
+  if (event.keyCode === 13 && newValue) {
     return saveNewItem(newValue);
   }
 
@@ -128,12 +131,12 @@ $('#new-item').keyup(event => {
     socket.emit('typing', { id: rowId, text: newValue });
   }
 }).focusout(() => {
-  const originalValue = $('#new-item').val().trim();
+  const originalValue = itemInput.val().trim();
 
   setTimeout(() => {
-    const newValue = $('#new-item').val().trim();
+    const newValue = itemInput.val().trim();
 
-    if (originalValue === newValue && newValue !== '' && socket.io.readyState === 'open') {
+    if (originalValue === newValue && newValue) {
       saveNewItem(newValue);
     }
   }, 100);
@@ -155,7 +158,7 @@ $(document).on('click', '.item-edit', event => {
 
   const text = target.siblings('label').text();
 
-  $('#new-item').val(text).focus();
+  itemInput.val(text).focus();
 
   socket.emit('removing', { id: target.parent().data('id') });
   socket.emit('typing', { id: rowId, text: text });
@@ -197,13 +200,12 @@ function createClearButton () {
 function resetInput () {
   oldValue = '';
   rowId = Math.random().toString(36).substring(7);
-  $('#new-item').val('');
+  itemInput.val('');
 }
 
 function saveNewItem (text) {
   socket.emit('saving', { id: rowId, text: text });
-
-  return resetInput();
+  resetInput();
 }
 
 function toggleClearButton () {
@@ -211,7 +213,7 @@ function toggleClearButton () {
 
   if ($('input[id^=checkbox-]:checked').length > 0) {
     if (!clearButton.length) {
-      $('ul').append(createClearButton());
+      listGroup.append(createClearButton());
     }
   } else if (clearButton.length) {
     clearButton.remove();
@@ -219,17 +221,15 @@ function toggleClearButton () {
 }
 
 function sortItems () {
-  const ul = $('div.item-container ul');
-
-  const children = ul.children('li').sort((a, b) => {
+  const children = listGroup.children('li').sort((a, b) => {
     let a_checked = $(a).find('input[type=checkbox]:checked').length;
     let b_checked = $(b).find('input[type=checkbox]:checked').length;
 
     return a_checked - b_checked || ($(a).attr('data-id') > $(b).attr('data-id') ? -1 : 1);
   });
 
-  ul.children('li').remove();
-  ul.prepend(children);
+  listGroup.children('li').remove();
+  listGroup.prepend(children);
 }
 
 resetInput();
