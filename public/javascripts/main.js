@@ -19,11 +19,9 @@ socket.on('cleared', cleared);
  */
 
 function connected (data) {
-  data.entries.forEach(entry => {
-    if ($(`li[data-id=${entry.id}]`).length > 0) return;
+  $('ul.list-group').find('li').remove();
 
-    saved({ tempId: null, entry: entry });
-  });
+  data.entries.forEach(entry => saved({ tempId: null, entry: entry }));
 
   toggleClearButton();
   sortItems();
