@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-const mongoHost = process.env.SHOPPING_LIST_MONGO_HOST || 'localhost';
+const mongoHost = process.env.MONGO_HOST || 'localhost';
 
 mongoose.connect(`mongodb://${mongoHost}/shopping-list`, {
   useMongoClient: true,
