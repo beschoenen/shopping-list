@@ -164,6 +164,8 @@ $(document).on('click', '.item-edit', event => {
   socket.emit('typing', { id: rowId, text: text });
 });
 
+$(document).on('click', '.autocomplete-suggestion', () => itemInput.focus());
+
 /**
  * Helper methods
  */
