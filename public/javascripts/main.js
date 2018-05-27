@@ -1,4 +1,4 @@
-const socket = io(`ws://${window.location.host}?room=${room}`);
+const socket = io(`${window.location.host}?room=${room}`);
 
 const listGroup = $('#list-group');
 const itemInput = $('#new-item');
