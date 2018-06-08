@@ -7,9 +7,11 @@ const app = express();
 
 const mongoHost = process.env.MONGO_HOST || 'localhost';
 
-mongoose.connect(`mongodb://${mongoHost}/shopping-list`, {
-  useMongoClient: true,
-  promiseLibrary: global.Promise
+mongoose.connect(`mongodb://${mongoHost}/shopping-list`, { useMongoClient: true }).then(() => {
+  console.log("Connected to MongoDB.");
+}).catch(error => {
+  console.log(`MongoDB connection error. Please make sure MongoDB is running. ${error}`);
+  process.exit(1);
 });
 
 require('./models/entry');
