@@ -10,7 +10,7 @@ COPY . .
 RUN apk add --no-cache make gcc g++ python
 RUN npm install --only=production --no-package-lock
 
-ENV MONGO_HOST=localhost
-EXPOSE 3000
+ENV MONGO_HOST localhost
+EXPOSE 9500
 
 CMD ["npm", "start"]

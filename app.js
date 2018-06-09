@@ -7,6 +7,7 @@ const app = express();
 
 const mongoHost = process.env.MONGO_HOST || 'localhost';
 
+mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${mongoHost}/shopping-list`, { useMongoClient: true }).then(() => {
   console.log("Connected to MongoDB.");
 }).catch(error => {
