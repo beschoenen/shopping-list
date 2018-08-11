@@ -181,9 +181,9 @@ function createRow (data, typing) {
     li.addClass('checked');
   }
 
-  li.append($('<input type="checkbox"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing).prop('checked', data.checked));
+  li.append($('<input type="checkbox" class="item-check"/>').attr('id', `checkbox-${data.id}`).prop('disabled', typing).prop('checked', data.checked));
   li.append('&nbsp;');
-  li.append($('<label>').attr('for', `checkbox-${data.id}`).text(data.text + (typing ? '..' : '')));
+  li.append($('<label class="item-text">').attr('for', `checkbox-${data.id}`).text(data.text + (typing ? '..' : '')));
   li.append('&nbsp;');
   li.append($('<i class="fas fa-pencil-alt pull-right item-edit">'));
 

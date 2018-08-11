@@ -53,16 +53,20 @@ ul {
   margin-bottom: 15px !important;
 
   li {
-    padding: 0 0 0 1.25rem !important;
+    padding: 0 1rem !important;
+    display: flex !important;
+    flex-direction: row;
+    overflow: hidden;
 
     &.typing {
       color: #949494;
     }
 
     &.checked {
-      label {
+      .item-text {
         text-decoration: line-through;
         color: #949494;
+        overflow-x: hidden;
       }
 
       .item-edit {
@@ -71,20 +75,29 @@ ul {
       }
     }
 
-    input[type=checkbox], label, .item-edit {
+    .item-check, .item-text, .item-edit {
       cursor: pointer;
     }
 
-    label {
+    .item-check {
+      flex-shrink: 0;
+      align-self: center;
+      min-width: 12px;
+      margin-right: 0.5rem;
+    }
+
+    .item-text {
+      align-self: flex-end;
+      flex-grow: 1;
       margin: 0;
-      padding: 1rem;
-      overflow-wrap: break-word;
+      padding: 1rem 0;
+      overflow-x: scroll;
     }
 
     .item-edit {
-      padding: 1.25rem;
-      position: absolute;
-      right: 0;
+      flex-shrink: 0;
+      align-self: center;
+      margin-left: 0.5rem;
     }
   }
 
