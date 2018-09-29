@@ -38,7 +38,6 @@ body {
   top: 55px;
   left: 50%;
   transform: translate(-50%, 0);
-  background: white;
 }
 
 .item-container {
@@ -113,9 +112,9 @@ ul {
 .autocomplete-suggestions {
   border: 1px solid #ced4da;
   border-radius: 4px;
-  background: #ffffff;
+  background: inherit;
   overflow: auto;
-  color: #495057;
+  color: inherit;
 }
 
 .autocomplete-suggestion {
