@@ -234,4 +234,20 @@ function sortItems () {
   listGroup.prepend(children);
 }
 
+function toggleDarkMode () {
+  $('body').toggleClass('bg-dark text-light')
+    .find('.navbar').toggleClass('navbar-light').toggleClass('navbar-dark')
+    .find('> span').toggleClass('text-light');
+
+  itemInput.toggleClass('bg-dark text-light');
+  listGroup.toggleClass('bg-dark text-light');
+
+  const iosTheme = $('meta[name="apple-mobile-web-app-status-bar-style"]');
+  const androidTheme = $('meta[name="theme-color"]');
+
+  // Theme
+  iosTheme.attr('content', (i, val) => val === 'white' ? 'black' : 'white');
+  androidTheme.attr('content',  (i, val) => val === '#fff' ? '#343a40' : '#fff');
+}
+
 resetInput();

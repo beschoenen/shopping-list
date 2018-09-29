@@ -51,11 +51,18 @@ body {
 ul {
   margin-bottom: 15px !important;
 
+  &.bg-dark {
+    li {
+      border: 1px solid #ced4da;
+    }
+  }
+
   li {
     padding: 0 1rem !important;
     display: flex !important;
     flex-direction: row;
     overflow: hidden;
+    background-color: inherit !important;
 
     &.typing {
       color: #949494;
