@@ -32,12 +32,17 @@ body {
   }
 }
 
+.navbar {
+  background-color: inherit;
+}
+
 .new-item-container {
   z-index: 2;
   position: fixed;
   top: 55px;
   left: 50%;
   transform: translate(-50%, 0);
+  background-color: inherit;
 }
 
 .item-container {
