@@ -5,6 +5,8 @@ const itemInput = $('#new-item');
 const statusIcon = $('#status');
 const userCount = $('#users');
 
+let touchTimer;
+
 /**
  * Socket Events
  */
@@ -165,6 +167,10 @@ $(document).on('click', '.item-edit', event => {
 });
 
 $(document).on('click', '.autocomplete-suggestion', () => itemInput.focus());
+
+const brand = $('.navbar-brand');
+brand.on('mousedown touchstart', () => touchTimer = setTimeout(toggleDarkMode, 600));
+brand.on('mouseup touchend', () => clearTimeout(touchTimer));
 
 /**
  * Helper methods
