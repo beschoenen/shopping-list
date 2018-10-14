@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 RUN apk add --no-cache make gcc g++ python
-RUN npm install --only=production --no-package-lock
+RUN npm ci --only=production --no-color
 
 ENV MONGO_HOST localhost
 ENV MONGO_DB shopping-list
