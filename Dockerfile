@@ -11,6 +11,8 @@ RUN apk add --no-cache make gcc g++ python
 RUN npm install --only=production --no-package-lock
 
 ENV MONGO_HOST localhost
+ENV MONGO_DB shopping-list
+
 EXPOSE 9500
 
 CMD ["npm", "start"]
