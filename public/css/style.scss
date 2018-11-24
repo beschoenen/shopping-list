@@ -63,7 +63,7 @@ ul {
   }
 
   li {
-    padding: 0 1rem !important;
+    padding: 0 0 0 1rem !important;
     display: flex !important;
     flex-direction: row;
     overflow: hidden;
@@ -109,6 +109,8 @@ ul {
       flex-shrink: 0;
       align-self: center;
       margin-left: 0.5rem;
+      padding: 1rem;
+      line-height: 24px;
     }
   }
 
