@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Shopping List</title>
+        <title>Shopping List - {{room.name}}</title>
 
         <meta charset="UTF-8"/>
         <meta name="description" content="Shopping List - Manage the {{room.name}} list"/>
@@ -36,9 +36,18 @@
             <span class="h1 navbar-brand mb-0 title">
                 List - {{room.name}}
             </span>
-            <span class="navbar-text">
-                <i id="status" class="fas fa-power-off red"></i>
-                <span id="users">0</span>
+            <span>
+                <span class="navbar-text">
+                    <i id="status" class="fas fa-power-off red"></i>
+                    <span id="users">0</span>
+                </span>
+                <div class="btn-group">
+                    <div class="three-dots" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item" id="clear-suggestions">Clear Suggestions</button>
+                        <button class="dropdown-item" id="rename-room" disabled>Rename Room</button>
+                    </div>
+                </div>
             </span>
         </nav>
 
@@ -47,9 +56,9 @@
         <script>
             const room = "{{room.name}}";
         </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.9/jquery.autocomplete.min.js"></script>
         <script src="/public/js/main.js"></script>
     </body>

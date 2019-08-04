@@ -56,30 +56,25 @@ function disconnect () {
 }
 
 function usersChanged (data) {
-  userCount.text(data.users);
+  userCount.text(data);
 }
 
 function suggestionsChanged (data) {
-  if (!itemInput.attr('placeholder')) {
-    let placeholder = data.suggestions[Math.floor(Math.random() * data.suggestions.length)] || 'Eggs';
+  let placeholder = data[Math.floor(Math.random() * data.length)] || 'Eggs';
 
-    itemInput.attr('placeholder', `${placeholder}...`);
-  }
-
-  itemInput.autocomplete({ lookupLimit: 5, lookup: data.suggestions });
+  itemInput.attr('placeholder', `${placeholder}...`);
+  itemInput.autocomplete({ lookupLimit: 5, lookup: data });
 }
 
 function typed (data) {
-  if (data.socketId === socket.id) return;
-
-  const oldRow = listGroup.find(`li[data-id=${data.data.id}]`);
-  const newRow = createRow(data.data, true);
+  const oldRow = listGroup.find(`li[data-id=${data.id}]`);
+  const newRow = createRow(data, true);
 
   if (!oldRow.length) {
     return listGroup.prepend(newRow);
   }
 
-  if (data.data.text.length < 1) {
+  if (data.text.length < 1) {
     return oldRow.remove();
   }
 
@@ -136,7 +131,7 @@ let rowId = null;
 itemInput.keyup(event => {
   const newValue = itemInput.val().trim();
 
-  if (event.keyCode === 13 && newValue) {
+  if (event.key === "Enter" && newValue) {
     return saveNewItem(newValue);
   }
 
@@ -157,6 +152,8 @@ itemInput.keyup(event => {
 });
 
 $(document).on('click', '#clear-button', () => socket.emit('clearing'));
+
+$(document).on('click', '#clear-suggestions', () => socket.emit('clearing-suggestions'));
 
 $(document).on('change', 'input[type=checkbox]', event => {
   socket.emit('checking', {

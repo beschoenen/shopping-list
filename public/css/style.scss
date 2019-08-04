@@ -36,6 +36,10 @@ body {
   background-color: inherit;
 }
 
+.navbar-text {
+  margin-right: 20px;
+}
+
 .new-item-container {
   z-index: 2;
   position: fixed;
@@ -121,6 +125,19 @@ ul {
 
 .container-small {
   max-width: 500px !important;
+}
+
+.three-dots {
+  font-size: 1.7em;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:after {
+    content: '\2807';
+    color: #2e2e2e
+  }
 }
 
 .autocomplete-suggestions {

@@ -22,30 +22,28 @@ module.exports = io => {
 
       Entry.find({ room: room._id }).sort({ checked: 1, _id: -1 }).exec().then(entries => {
         socket.emit('connected', { entries: entries.map(entry => entry.toJSON) });
-        socket.emit('suggestions-changed', { suggestions: room.suggestions });
+        socket.emit('suggestions-changed', room.suggestions);
       });
     });
 
     //////////////////
     // Events Handlers
 
-    socket.on('disconnect', () => {
-      if (userRoom) emitClients();
-    });
+    socket.on('disconnect', () => userRoom && emitClients());
 
-    socket.on('typing', data => io.sockets.in(userRoom.name).emit('typed', { socketId: socket.id, data: data }));
+    socket.on('typing', data => socket.to(userRoom.name).emit('typed', data));
 
     socket.on('saving', data => {
       Entry.create({ text: data.text, room: userRoom._id }).then(entry => {
         io.sockets.in(userRoom.name).emit('saved', { tempId: data.id, entry: entry.toJSON });
 
-        if (userRoom.suggestions.indexOf(data.text) === -1) {
-          userRoom.suggestions.push(data.text);
+        if (userRoom.suggestions.indexOf(data.text) > -1) return;
 
-          Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, error => {
-            if (!error) io.sockets.in(userRoom.name).emit('suggestions-changed', { suggestions: userRoom.suggestions });
-          });
-        }
+        userRoom.suggestions.push(data.text);
+
+        Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, error => {
+          if (!error) io.sockets.in(userRoom.name).emit('suggestions-changed', userRoom.suggestions);
+        });
       });
     });
 
@@ -72,12 +70,20 @@ module.exports = io => {
       });
     });
 
+    socket.on('clearing-suggestions', () => {
+      userRoom.suggestions = [];
+
+      Room.update({ _id: userRoom._id }, { $set: { suggestions: userRoom.suggestions } }, error => {
+        if (!error) io.sockets.in(userRoom.name).emit('suggestions-changed', []);
+      });
+    });
+
     /////////////////
     // Helper methods
 
     function emitClients () {
       io.sockets.in(userRoom.name).clients((error, clients) => {
-        io.sockets.in(userRoom.name).emit('users-changed', { users: clients.length });
+        io.sockets.in(userRoom.name).emit('users-changed', clients.length);
       });
     }
   });
