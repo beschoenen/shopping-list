@@ -11,7 +11,7 @@
     "express": "^4.17.1",
     "hbs": "^4.0.4",
     "mongoose": "^4.13.18",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "node-sass-middleware": "^0.11.0",
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.2.0"
