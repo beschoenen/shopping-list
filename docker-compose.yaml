@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  shopping-list:
+    container_name: shopping-list
+    image: beschoenen/shopping-list:latest
+    restart: unless-stopped
+    networks:
+      - shopping-list
+    ports:
+      - "${PORT:-80}:80"
+    environment:
+      PORT: "80"
+      MONGO_HOST: "shopping-list-db"
+      MONGO_DB: "shopping-list"
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+      - /app/node_modules
+  mongodb:
+    container_name: shopping-list-db
+    image: mongo:4
+    restart: unless-stopped
+    networks:
+      - shopping-list
+    volumes:
+      - "./database:/data/db"
+networks:
+  shopping-list:
+    name: shopping-list
+    driver: bridge

@@ -5,6 +5,20 @@ body {
   -moz-user-select: none;
 }
 
+.bg-dark {
+  .list-group-item {
+    border-color: rgba(255, 255, 255, 0.125);
+  }
+
+  li {
+    border: 1px solid #ced4da;
+  }
+
+  .three-dots {
+    color: unset;
+  }
+}
+
 .title {
   max-width: calc(100% - 80px);
   margin-right: 0 !important;
@@ -59,12 +73,6 @@ body {
 
 ul {
   margin-bottom: 15px !important;
-
-  &.bg-dark {
-    li {
-      border: 1px solid #ced4da;
-    }
-  }
 
   li {
     padding: 0 0 0 1rem !important;
@@ -129,6 +137,7 @@ ul {
 
 .three-dots {
   font-size: 1.7em;
+  color: #2e2e2e;
 
   &:hover {
     cursor: pointer;
@@ -136,7 +145,6 @@ ul {
 
   &:after {
     content: '\2807';
-    color: #2e2e2e
   }
 }
 

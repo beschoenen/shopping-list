@@ -1,19 +1,25 @@
 {
   "name": "shopping-list",
-  "version": "1.1.0",
+  "license": "MIT",
+  "author": "Kevin Richter",
+  "version": "1.2.0",
   "private": true,
+  "engines": {
+    "node": "<18"
+  },
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.5",
-    "express": "^4.17.1",
-    "hbs": "^4.1.2",
-    "mongoose": "^4.13.21",
-    "node-sass": "^4.14.1",
-    "node-sass-middleware": "^0.11.0",
+    "body-parser": "^1.20.0",
+    "bootstrap": "^4.6.2",
+    "express": "^4.18.1",
+    "hbs": "^4.2.0",
+    "jquery": "^3.6.0",
+    "mongoose": "^6.5.1",
+    "node-sass": "^7.0.1",
+    "node-sass-middleware": "^1.0.1",
     "serve-favicon": "^2.4.5",
-    "socket.io": "^2.4.1"
+    "socket.io": "^4.5.1"
   }
 }

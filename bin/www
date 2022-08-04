@@ -4,21 +4,25 @@
  * Module dependencies.
  */
 
-let app = require('../app');
-let http = require('http');
+const app = require('../app');
+const SocketHandler = require('../src/socketHandler');
+
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
  */
 
-let port = normalizePort(process.env.PORT || '9500');
+const port = normalizePort(process.env.PORT || '9500');
+
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-let server = http.createServer(app);
+const server = createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -32,9 +36,8 @@ server.on('listening', onListening);
  * Enable web socket
  */
 
-let io = require('socket.io').listen(server);
-
-require('../socketHandler')(io);
+const io = new Server(server);
+const handler = new SocketHandler(io);
 
 /**
  * Normalize a port into a number, string, or false.

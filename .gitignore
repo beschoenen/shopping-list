@@ -4,3 +4,4 @@ database
 *.iml
 .DS_Store
 *.css
+.env

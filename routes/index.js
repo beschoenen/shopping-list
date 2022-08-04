@@ -1,14 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const router = express.Router();
 
 const Room = mongoose.model('Room');
 
-router.get('/:room/sw.js', function (req, res) {
-  res.sendFile('sw.js', { root: `${__dirname}/../public/js` });
+router.get('/:room/sw.js', (req, res) => {
+  res.sendFile('sw.js', { root: path.join(__dirname, 'public', 'js') });
 });
 
-router.get('/:room/manifest.json', function (req, res) {
+router.get('/:room/manifest.json', (req, res) => {
   const name = req.params.room || 'default';
 
   res.setHeader('Content-Type', 'application/json');
@@ -43,7 +44,7 @@ router.get('/:room/manifest.json', function (req, res) {
   });
 });
 
-router.get('/:room?', async function (req, res) {
+router.get('/:room?', async (req, res) => {
   const name = req.params.room || 'default';
 
   const room = await Room.findOneAndUpdate(

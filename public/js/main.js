@@ -5,8 +5,6 @@ const itemInput = $('#new-item');
 const statusIcon = $('#status');
 const userCount = $('#users');
 
-let touchTimer;
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register(`/${room}/sw.js`).then(function (registration) {
@@ -177,10 +175,6 @@ $(document).on('click', '.item-edit', event => {
 
 $(document).on('click', '.autocomplete-suggestion', () => itemInput.focus());
 
-const brand = $('.navbar-brand');
-brand.on('mousedown touchstart', () => touchTimer = setTimeout(toggleDarkMode, 600));
-brand.on('mouseup touchend', () => clearTimeout(touchTimer));
-
 /**
  * Helper methods
  */
@@ -247,22 +241,6 @@ function sortItems () {
 
   listGroup.children('li').remove();
   listGroup.prepend(children);
-}
-
-function toggleDarkMode () {
-  $('body').toggleClass('bg-dark text-light')
-    .find('.navbar').toggleClass('navbar-light').toggleClass('navbar-dark')
-    .find('> span').toggleClass('text-light');
-
-  itemInput.toggleClass('bg-dark text-light');
-  listGroup.toggleClass('bg-dark text-light');
-
-  const iosTheme = $('meta[name="apple-mobile-web-app-status-bar-style"]');
-  const androidTheme = $('meta[name="theme-color"]');
-
-  // Theme
-  iosTheme.attr('content', (i, val) => val === 'white' ? 'black' : 'white');
-  androidTheme.attr('content',  (i, val) => val === '#fff' ? '#343a40' : '#fff');
 }
 
 resetInput();
