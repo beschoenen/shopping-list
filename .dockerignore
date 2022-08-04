@@ -2,4 +2,9 @@ node_modules
 npm-debug.log
 .idea
 database
-*.iml
+.editorconfig
+.env.example
+readme.md
+LICENSE
+.gitignore
+docker-compose.yaml

@@ -17,6 +17,12 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "wget -O /dev/null http://localhost || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
   mongodb:
     container_name: shopping-list-db
     image: mongo:4
@@ -25,6 +31,12 @@ services:
       - shopping-list
     volumes:
       - "./database:/data/db"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 networks:
   shopping-list:
     name: shopping-list

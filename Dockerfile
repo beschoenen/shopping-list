@@ -34,7 +34,6 @@ RUN apk del \
     make \
     gcc \
     g++ \
-    python3 \
-    wget;
+    python3;
 
 CMD ["sh", "/docker-boot.sh"]
