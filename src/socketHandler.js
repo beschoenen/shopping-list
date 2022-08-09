@@ -9,6 +9,7 @@ class SocketHandler {
     io.on('connection', async socket => {
       if (!socket.handshake.query.room) {
         socket.disconnect();
+        return;
       }
 
       const room = await Room.findOne({ name: socket.handshake.query.room }).exec();
@@ -19,8 +20,8 @@ class SocketHandler {
       }
 
       socket.join(room.name);
-      socket.on('disconnect', () => this.onDisconnect(room));
-      socket.on('typing', data => this.onTyping(data, room));
+      socket.on('disconnect', () => this.emitClients(room));
+      socket.on('typing', data => socket.to(room.name).emit('typed', data));
       socket.on('saving', data => this.onSaving(data, room));
       socket.on('checking', data => this.onChecking(data, room));
       socket.on('removing', data => this.onRemoving(data, room));
@@ -34,16 +35,6 @@ class SocketHandler {
       socket.emit('connected', { entries: entries.map(entry => entry.toJSON) });
       socket.emit('suggestions-changed', room.suggestions);
     });
-  }
-
-  async onDisconnect (room) {
-    if (room) {
-      await this.emitClients(room);
-    }
-  }
-
-  async onTyping (data, room) {
-    this.io.sockets.in(room.name).emit('typed', data);
   }
 
   async onSaving (data, room) {
@@ -86,7 +77,7 @@ class SocketHandler {
 
   async onClearing (room) {
     try {
-      await Entry.deleteOne({ checked: true, room: room._id }).exec();
+      await Entry.deleteMany({ checked: true, room: room._id }).exec();
 
       this.io.sockets.in(room.name).emit('cleared');
     } catch (e) {
