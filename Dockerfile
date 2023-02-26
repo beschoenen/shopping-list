@@ -9,6 +9,10 @@ ENV PORT 9500
 
 WORKDIR /tmp
 
+RUN apk add \
+    wget \
+    bash;
+
 RUN wget -O wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
 RUN chmod +x wait-for-it.sh
 RUN mv wait-for-it.sh  /usr/local/bin/wait-for-it
