@@ -6,7 +6,7 @@ const router = express.Router();
 const Room = mongoose.model('Room');
 
 router.get('/:room/sw.js', (req, res) => {
-  res.sendFile('sw.js', { root: path.join(__dirname, 'public', 'js') });
+  res.sendFile('sw.js', { root: path.join(__dirname, '..', 'public', 'js') });
 });
 
 router.get('/:room/manifest.json', (req, res) => {
