@@ -12,6 +12,7 @@ services:
       PORT: "80"
       MONGO_HOST: "shopping-list-db"
       MONGO_DB: "shopping-list"
+    entrypoint: ["npm", "run", "serve"]
     depends_on:
       - mongodb
     volumes:

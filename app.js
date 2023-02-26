@@ -1,11 +1,10 @@
 const express = require('express');
 const path = require('path');
-const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
 
 const app = express();
 
-const mongoHost = process.env.MONGO_HOST || 'localhost';
+const mongoHost = process.env.MONGO_HOST || '127.0.0.1';
 const mongoPort = process.env.MONGO_PORT || 27017;
 const mongoDB = process.env.MONGO_DB || 'shopping-list';
 
@@ -19,8 +18,6 @@ require('./models');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
-app.use(sassMiddleware({ src: __dirname }));
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/public', require('./routes/dependencies'));

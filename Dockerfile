@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node:19-alpine
 
 MAINTAINER Kevin Richter
 
@@ -8,14 +8,6 @@ ENV MONGO_DB shopping-list
 ENV PORT 9500
 
 WORKDIR /tmp
-
-RUN apk add \
-    make \
-    gcc \
-    g++ \
-    python3 \
-    wget \
-    bash;
 
 RUN wget -O wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
 RUN chmod +x wait-for-it.sh
@@ -30,10 +22,6 @@ COPY . .
 
 RUN npm ci
 
-RUN apk del \
-    make \
-    gcc \
-    g++ \
-    python3;
+RUN npm run sass
 
 CMD ["sh", "/docker-boot.sh"]

@@ -3,5 +3,5 @@ node_modules
 database
 *.iml
 .DS_Store
-*.css
+*.css*
 .env
